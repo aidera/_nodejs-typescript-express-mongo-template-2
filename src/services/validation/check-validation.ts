@@ -1,4 +1,4 @@
-import {validationResult} from "express-validator";
+import { validationResult } from "express-validator";
 
 import errorHandler from "../error-handler";
 import responseCodes from "../../utils/response-codes";
@@ -9,7 +9,7 @@ export default (req) => {
     errorHandler.throw({
       statusCode: 422,
       errorCode: responseCodes.validationFailed,
-      validationErrors
+      validationErrors,
     });
   }
 };

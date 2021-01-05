@@ -5,9 +5,8 @@ import config from "config";
 
 import router from "./routes/router";
 import errorHandler from "./services/error-handler";
-import {startDB} from "./utils/database";
-import socketIO from './utils/socket';
-
+import { startDB } from "./utils/database";
+import socketIO from "./utils/socket";
 
 const app = express();
 
@@ -19,8 +18,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.urlencoded({extended: false}));
-
+app.use(bodyParser.urlencoded({ extended: false }));
 
 router(app);
 errorHandler.set(app);
@@ -29,7 +27,7 @@ startDB(() => {
   const server = app.listen(config.get("port"));
   const io = socketIO.init(server);
 
-  io.on("connection", socket => {
+  io.on("connection", (socket) => {
     console.log("Client connected");
   });
 });

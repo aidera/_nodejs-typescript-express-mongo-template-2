@@ -14,9 +14,8 @@ export interface ErrnoException extends Error {
   validationErrors?: any;
 }
 
-
 export default {
-  throw: ({statusCode, errorCode, description, validationErrors}: ErrParams) => {
+  throw: ({ statusCode, errorCode, description, validationErrors }: ErrParams) => {
     const error: ErrnoException = new Error();
     error.statusCode = statusCode;
     error.errorCode = errorCode;
@@ -34,19 +33,25 @@ export default {
 
       switch (statusCode) {
         case 401:
-          res.status(statusCode).json({error: {code: errorCode || responseCodes.unauthenticated, description: description || 'You are not authorized'}});
+          res.status(statusCode).json({
+            error: {
+              code: errorCode || responseCodes.unauthenticated,
+              description: description || "You are not authorized",
+            },
+          });
           break;
         case 400:
         case 404:
-          res.status(statusCode).json({error: {code: errorCode || responseCodes.notFound, description}});
+          res.status(statusCode).json({ error: { code: errorCode || responseCodes.notFound, description } });
           break;
         case 422:
-          res.status(statusCode).json({error: {code: errorCode || responseCodes.validationFailed, description, ...validationErrors}});
+          res
+            .status(statusCode)
+            .json({ error: { code: errorCode || responseCodes.validationFailed, description, ...validationErrors } });
           break;
         default:
-          res.status(statusCode).json({error: {code: errorCode || responseCodes.serverError, description}});
+          res.status(statusCode).json({ error: { code: errorCode || responseCodes.serverError, description } });
       }
     });
-  }
-}
-
+  },
+};

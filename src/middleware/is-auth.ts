@@ -9,7 +9,7 @@ import responseCodes from "../utils/response-codes";
 export default (req, res, next) => {
   const authHeader = req.get("Authorization");
   if (!authHeader) {
-    errorHandler.throw({statusCode: 401});
+    errorHandler.throw({ statusCode: 401 });
   }
 
   const token = authHeader.split(" ")[1];
@@ -18,11 +18,11 @@ export default (req, res, next) => {
   try {
     decodedToken = jwt.verify(token, config.get("jwtSecret"));
   } catch (err) {
-    errorHandler.throw({statusCode: 401, errorCode: responseCodes.invalidToken});
+    errorHandler.throw({ statusCode: 401, errorCode: responseCodes.invalidToken });
   }
 
   if (!decodedToken) {
-    errorHandler.throw({statusCode: 401});
+    errorHandler.throw({ statusCode: 401 });
   }
 
   req.authUserId = decodedToken.userId;

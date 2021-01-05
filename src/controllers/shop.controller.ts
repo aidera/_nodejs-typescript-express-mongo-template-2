@@ -5,12 +5,11 @@ import errorHandler from "../services/error-handler";
 import responseCodes from "../utils/response-codes";
 import io from "../utils/socket";
 
-
 export default {
   getAllProducts: async (req, res, next) => {
     try {
       const products = await Product.find();
-      res.status(200).json({products});
+      res.status(200).json({ products });
     } catch (err) {
       next(err);
     }
@@ -45,14 +44,13 @@ export default {
       const product = await Product.findById(productId);
 
       if (product === null) {
-        errorHandler.throw({statusCode: 404, errorCode: responseCodes.productNotFound});
+        errorHandler.throw({ statusCode: 404, errorCode: responseCodes.productNotFound });
       } else {
-        res.status(200).json({product});
+        res.status(200).json({ product });
       }
     } catch (err) {
       next(err);
     }
-
   },
 
   addProduct: async (req, res, next) => {
@@ -63,7 +61,10 @@ export default {
     const description = req.body.description;
 
     const product = new Product({
-      title, price, description, creator: req.authUserId
+      title,
+      price,
+      description,
+      creator: req.authUserId,
     });
 
     try {
@@ -73,7 +74,7 @@ export default {
       user.products.push(product);
       await user.save();
 
-      io.get().emit("products", {action: "add", product});
+      io.get().emit("products", { action: "add", product });
 
       res.status(201).json({
         message: "Product added",
@@ -82,7 +83,6 @@ export default {
     } catch (err) {
       next(err);
     }
-
   },
 
   editProduct: async (req, res, next) => {
@@ -96,7 +96,7 @@ export default {
     try {
       const product = await Product.findById(productId);
       if (product === null) {
-        errorHandler.throw({statusCode: 404, errorCode: responseCodes.productNotFound});
+        errorHandler.throw({ statusCode: 404, errorCode: responseCodes.productNotFound });
       } else {
         if (title) product.title = title;
         if (price) product.price = price;
@@ -104,7 +104,7 @@ export default {
 
         await product.save();
 
-        io.get().emit("products", {action: "edit", product});
+        io.get().emit("products", { action: "edit", product });
 
         res.status(200).json({
           message: "Product updated",
@@ -114,8 +114,6 @@ export default {
     } catch (err) {
       next(err);
     }
-
-
   },
 
   removeProduct: async (req, res, next) => {
@@ -124,17 +122,17 @@ export default {
     try {
       const product = await Product.findByIdAndRemove(productId);
       if (product === null) {
-        errorHandler.throw({statusCode: 404, errorCode: responseCodes.productNotFound});
+        errorHandler.throw({ statusCode: 404, errorCode: responseCodes.productNotFound });
       }
 
       const user = await User.findById(product.creator);
       // user.products.pull(productId);
-      user.products.filter(userProduct => {
+      user.products.filter((userProduct) => {
         return userProduct._id !== productId;
-      })
+      });
       await user.save();
 
-      io.get().emit("products", {action: "remove", product});
+      io.get().emit("products", { action: "remove", product });
 
       res.send({
         message: "Product removed",
@@ -143,8 +141,5 @@ export default {
     } catch (err) {
       next(err);
     }
-
-  }
+  },
 };
-
-

@@ -1,17 +1,20 @@
-import {Document, model, Schema, Types} from "mongoose";
+import { Document, model, Schema, Types } from "mongoose";
 
-import {IUser} from "./User";
+import { IUser } from "./User";
 
-const ProductSchema = new Schema({
-  title: {type: String, required: true},
-  price: {type: Number, required: true},
-  description: {type: String, required: true},
-  creator: {
-    type: Types.ObjectId,
-    ref: 'User',
-    required: true
-  }
-}, {timestamps: true});
+const ProductSchema = new Schema(
+  {
+    title: { type: String, required: true },
+    price: { type: Number, required: true },
+    description: { type: String, required: true },
+    creator: {
+      type: Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+  },
+  { timestamps: true },
+);
 
 export interface IProduct extends Document {
   _id: string;
@@ -21,4 +24,4 @@ export interface IProduct extends Document {
   creator: IUser;
 }
 
-export default model<IProduct>('Product', ProductSchema);
+export default model<IProduct>("Product", ProductSchema);
